@@ -15,7 +15,7 @@ class Timer {
   Timer& operator=(const Timer& other) = delete;
   Timer& operator=(Timer&& other) noexcept;
   void StartSimulationTime() noexcept;
-  size_type GetTimeSimulation() noexcept;
+  [[nodiscard]] size_type GetTimeSimulation() const noexcept;
  private:
   std::chrono::time_point<std::chrono::high_resolution_clock> time_start_;
 };

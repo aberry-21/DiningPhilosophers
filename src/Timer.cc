@@ -19,7 +19,8 @@ Timer &Timer::operator=(Timer &&other) noexcept {
 void Timer::StartSimulationTime() noexcept {
   time_start_ = std::chrono::high_resolution_clock::now();
 }
-Timer::size_type Timer::GetTimeSimulation() noexcept {
+
+Timer::size_type Timer::GetTimeSimulation() const noexcept {
   return std::chrono::duration_cast<std::chrono::milliseconds>(
       std::chrono::high_resolution_clock::now() - time_start_).count();
 }
