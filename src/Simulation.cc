@@ -3,49 +3,66 @@
 //
 
 #include <thread>
+#include <vector>
 #include "includes/Simulation.h"
 #include "includes/Philo.h"
 
-void Simulation::routine(Philo& philo) {
+void Simulation::Routine(Philo& philo) {
   std::unique_lock<std::mutex> lk(m_);
-  while (!IsReady()) {
-    cv_.wait(lk);
-  }
+  cv_.wait(lk, [this](){return ready_;});
   lk.unlock();
   philo.PhiloLive();
 }
 
-Simulation::Simulation(Config *config) : config_(config) {
-  philos_ = std::make_unique<Philo[]>(config_->GetNumberOfPhilo());
-  std::shared_ptr<std::mutex> left_fork;
-  std::shared_ptr<std::mutex> right_fork;
+bool Simulation::CheckCountEat() {
   for (int i = 0; i < config_->GetNumberOfPhilo(); ++i) {
-    philos_[i].SetPhiloAttributes(config_, i + 1);
-    if (i == 0) {
-      left_fork = std::make_shared<std::mutex>();
-      philos_[i].SetLeftFork(left_fork);
-      philos_[config_->GetNumberOfPhilo() - 1].SetRightFork(left_fork);
-      right_fork = std::make_shared<std::mutex>();
-      philos_[i].SetRightFork(right_fork);
-      philos_[i + 1].SetLeftFork(right_fork);
-    } else {
-      right_fork = std::make_shared<std::mutex>();
-      philos_[i].SetRightFork(right_fork);
-      philos_[i + 1].SetLeftFork(right_fork);
+    if (philos_[i].GetCountEat() != 0) {
+      return false;
+      }
+  }
+  return true;
+}
+
+void Simulation::Supervisor() {
+  std::unique_lock<std::mutex> lk(m_);
+  cv_.wait(lk, [this](){return ready_;});
+  lk.unlock();
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  while (true) {
+    for (int i = 0; i < config_->GetNumberOfPhilo(); ++i) {
+      if (static_cast<int>(config_->GetTimer().GetTimeSimulation() -
+        philos_[i].GetTimeLastEat()) >= config_->GetTimeToDie() + 5) {
+        philos_[i].SayDied();
+        return;
+      }
+    }
+    if (config_->IsLimitLunch() && CheckCountEat()) {
+      return;
     }
   }
-  for (int i = 0; i < config_->GetNumberOfPhilo(); ++i) {
-    std::thread(&Simulation::routine, this,  std::ref(philos_[i])).detach();
+}
+
+Simulation::Simulation(Config *config) : config_(config) {
+  auto size = config_->GetNumberOfPhilo();
+  philos_.reserve(size);
+  std::vector<std::shared_ptr<std::mutex>> mtx;
+  mtx.reserve(size);
+  for (int i = 0; i < size; ++i) {
+    std::shared_ptr<std::mutex> fork = std::make_shared<std::mutex>();
+    mtx.emplace_back(fork);
+  }
+  for (int i = 0; i < size; ++i) {
+    philos_.emplace_back(mtx[i], mtx[(i + 1) % size], config_, i + 1);
+  }
+  for (int i = 0; i < size; ++i) {
+    std::thread(&Simulation::Routine, this, std::ref(philos_[i])).detach();
   }
 }
 
-bool Simulation::IsReady() const {
-  return ready_;
-}
 void Simulation::StartSimulation() {
-  //thread supervisor
-  ready_ = true;
   config_->GetTimer().StartSimulationTime();
+  auto supervisor = std::thread(&Simulation::Supervisor, this);
+  ready_ = true;
   cv_.notify_all();
+  supervisor.join();
 }
-
