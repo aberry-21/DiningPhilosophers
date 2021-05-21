@@ -4,16 +4,11 @@
 
 #include "includes/config.h"
 
-config::config(int number_of_philo,
-               int time_to_die,
-               int time_to_eat,
-               int time_to_sleep,
-               int number_of_lunch)
-    : number_of_philo_(number_of_philo),
-      time_to_die_(time_to_die),
-      time_to_eat_(time_to_eat),
-      time_to_sleep_(time_to_sleep),
-      number_of_lunch_(number_of_lunch) {
+config::config(int number_of_philo, int time_to_die, int time_to_eat,
+               int time_to_sleep, int number_of_lunch) :
+               number_of_philo_(number_of_philo), time_to_die_(time_to_die),
+               time_to_eat_(time_to_eat), time_to_sleep_(time_to_sleep),
+               number_of_lunch_(number_of_lunch) {
   if (number_of_lunch > 0) {
     limit_lunch_ = true;
   }
@@ -46,6 +41,7 @@ std::mutex &config::GetIoMutex(){
 timer &config::GetTimer(){
   return timer_;
 }
+
 bool config::IsLimitLunch() const {
   return limit_lunch_;
 }

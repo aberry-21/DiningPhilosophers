@@ -13,7 +13,6 @@
 class philosophers;
 
 class simulation {
-
  public:
   explicit simulation(config *config);
   void StartSimulation();

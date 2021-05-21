@@ -13,14 +13,12 @@ class philosophers {
  public:
   philosophers() = default;
   philosophers(const std::shared_ptr<std::mutex> &right_fork,
-        const std::shared_ptr<std::mutex> &left_fork,
-        config *config,
-        int id);
+               const std::shared_ptr<std::mutex> &left_fork,
+               config *config, int id);
   philosophers(const philosophers& other) = delete;
   philosophers(philosophers&& other) noexcept;
   philosophers& operator=(const philosophers& other) = delete;
   philosophers& operator=(philosophers&& other) noexcept;
-
   void SayTaken() const noexcept;
   void SayEating() noexcept;
   void SaySleeping() const noexcept;

@@ -19,4 +19,3 @@ class timer {
  private:
   std::chrono::time_point<std::chrono::high_resolution_clock> time_start_;
 };
-

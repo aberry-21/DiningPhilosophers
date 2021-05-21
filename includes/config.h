@@ -10,11 +10,8 @@
 
 class config {
  public:
-  config(int number_of_philo,
-         int time_to_die,
-         int time_to_eat,
-         int time_to_sleep,
-         int number_of_lunch);
+  config(int number_of_philo, int time_to_die, int time_to_eat,
+         int time_to_sleep, int number_of_lunch);
   config() = delete;
   config(const config& other) = delete;
   config(config&& other) noexcept = delete;
