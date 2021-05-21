@@ -4,17 +4,17 @@
 
 #include <thread>
 #include <vector>
-#include "includes/Simulation.h"
-#include "includes/Philo.h"
+#include "includes/simulation.h"
+#include "includes/philosophers.h"
 
-void Simulation::Routine(Philo& philo) {
+void simulation::Routine(philosophers& philo) {
   std::unique_lock<std::mutex> lk(m_);
   cv_.wait(lk, [this](){return ready_;});
   lk.unlock();
   philo.PhiloLive();
 }
 
-bool Simulation::CheckCountEat() {
+bool simulation::CheckCountEat() {
   for (int i = 0; i < config_->GetNumberOfPhilo(); ++i) {
     if (philos_[i].GetCountEat() != 0) {
       return false;
@@ -23,7 +23,7 @@ bool Simulation::CheckCountEat() {
   return true;
 }
 
-void Simulation::Supervisor() {
+void simulation::Supervisor() {
   std::unique_lock<std::mutex> lk(m_);
   cv_.wait(lk, [this](){return ready_;});
   lk.unlock();
@@ -42,7 +42,7 @@ void Simulation::Supervisor() {
   }
 }
 
-Simulation::Simulation(Config *config) : config_(config) {
+simulation::simulation(config *config) : config_(config) {
   auto size = config_->GetNumberOfPhilo();
   philos_.reserve(size);
   std::vector<std::shared_ptr<std::mutex>> mtx;
@@ -55,13 +55,13 @@ Simulation::Simulation(Config *config) : config_(config) {
     philos_.emplace_back(mtx[i], mtx[(i + 1) % size], config_, i + 1);
   }
   for (int i = 0; i < size; ++i) {
-    std::thread(&Simulation::Routine, this, std::ref(philos_[i])).detach();
+    std::thread(&simulation::Routine, this, std::ref(philos_[i])).detach();
   }
 }
 
-void Simulation::StartSimulation() {
+void simulation::StartSimulation() {
   config_->GetTimer().StartSimulationTime();
-  auto supervisor = std::thread(&Simulation::Supervisor, this);
+  auto supervisor = std::thread(&simulation::Supervisor, this);
   ready_ = true;
   cv_.notify_all();
   supervisor.join();

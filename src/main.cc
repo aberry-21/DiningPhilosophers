@@ -2,8 +2,8 @@
 // Created by Aaron Berry on 5/19/21.
 //
 
-#include "includes/Config.h"
-#include "includes/Simulation.h"
+#include "includes/config.h"
+#include "includes/simulation.h"
 
 static bool IsNumber(const std::string &s) {
   return all_of(s.cbegin(), s.cend(), [](const char &c) {
@@ -29,8 +29,8 @@ static std::shared_ptr<std::vector<int>> CheckArgv(int argc, char **argv) {
 int main(int argc, char **argv)
 {
   std::shared_ptr<std::vector<int>> params = CheckArgv(argc, argv);
-  auto conf = Config((*params)[0], (*params)[1],
+  auto conf = config((*params)[0], (*params)[1],
 (*params)[2], (*params)[3], (*params)[4]);
-  Simulation simulation(&conf);
+  simulation simulation(&conf);
   simulation.StartSimulation();
 }

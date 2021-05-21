@@ -7,24 +7,24 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-#include "includes/Philo.h"
-#include "includes/Config.h"
+#include "includes/philosophers.h"
+#include "includes/config.h"
 
-class Philo;
+class philosophers;
 
-class Simulation {
+class simulation {
 
  public:
-  explicit Simulation(Config *config);
+  explicit simulation(config *config);
   void StartSimulation();
  private:
   bool ready_ = false;
   std::mutex m_;
   std::condition_variable cv_;
-  Config *config_ = nullptr;
-  std::vector<Philo> philos_;
+  config *config_ = nullptr;
+  std::vector<philosophers> philos_;
 
-  void Routine(Philo &philo);
+  void Routine(philosophers &philo);
   void Supervisor();
   bool CheckCountEat();
 };

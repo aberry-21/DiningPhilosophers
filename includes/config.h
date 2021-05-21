@@ -6,27 +6,27 @@
 
 #include <memory>
 #include <mutex>
-#include "includes/Timer.h"
+#include "includes/timer.h"
 
-class Config {
+class config {
  public:
-  Config(int number_of_philo,
+  config(int number_of_philo,
          int time_to_die,
          int time_to_eat,
          int time_to_sleep,
          int number_of_lunch);
-  Config() = delete;
-  Config(const Config& other) = delete;
-  Config(Config&& other) noexcept = delete;
-  Config& operator=(const Config& other) = delete;
-  Config& operator=(Config&& other) noexcept = delete;
+  config() = delete;
+  config(const config& other) = delete;
+  config(config&& other) noexcept = delete;
+  config& operator=(const config& other) = delete;
+  config& operator=(config&& other) noexcept = delete;
   [[nodiscard]] int GetNumberOfPhilo() const;
   [[nodiscard]] int GetTimeToDie() const;
   [[nodiscard]] int GetTimeToEat() const;
   [[nodiscard]] int GetTimeToSleep() const;
   [[nodiscard]] int GetNumberOfLunch() const;
   [[nodiscard]] std::mutex &GetIoMutex();
-  [[nodiscard]] Timer &GetTimer();
+  [[nodiscard]] timer &GetTimer();
   [[nodiscard]] bool IsLimitLunch() const;
  private:
   int number_of_philo_;
@@ -36,5 +36,5 @@ class Config {
   int number_of_lunch_;
   bool limit_lunch_;
   std::mutex io_mutex_;
-  Timer timer_;
+  timer timer_;
 };

@@ -7,19 +7,19 @@
 #include <memory>
 #include <mutex>
 #include <shared_mutex>
-#include "includes/Config.h"
+#include "includes/config.h"
 
-class Philo {
+class philosophers {
  public:
-  Philo() = default;
-  Philo(const std::shared_ptr<std::mutex> &right_fork,
+  philosophers() = default;
+  philosophers(const std::shared_ptr<std::mutex> &right_fork,
         const std::shared_ptr<std::mutex> &left_fork,
-        Config *config,
+        config *config,
         int id);
-  Philo(const Philo& other) = delete;
-  Philo(Philo&& other) noexcept;
-  Philo& operator=(const Philo& other) = delete;
-  Philo& operator=(Philo&& other) noexcept;
+  philosophers(const philosophers& other) = delete;
+  philosophers(philosophers&& other) noexcept;
+  philosophers& operator=(const philosophers& other) = delete;
+  philosophers& operator=(philosophers&& other) noexcept;
 
   void SayTaken() const noexcept;
   void SayEating() noexcept;
@@ -33,7 +33,7 @@ class Philo {
   std::shared_ptr<std::mutex> right_fork_ = nullptr;
   std::shared_ptr<std::mutex> left_fork_ = nullptr;
   mutable std::shared_mutex mutex_eat_;
-  Config *config_ = nullptr;
+  config *config_ = nullptr;
   int id_ = 0;
   int count_eat_ = 0;
   size_t time_last_eat = 0;

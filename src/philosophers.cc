@@ -4,15 +4,15 @@
 
 #include <iostream>
 #include <thread>
-#include "includes/Philo.h"
-#include "includes/Config.h"
+#include "includes/philosophers.h"
+#include "includes/config.h"
 
-Philo::Philo(Philo &&other) noexcept {
+philosophers::philosophers(philosophers &&other) noexcept {
   std::swap(left_fork_, other.left_fork_);
   std::swap(right_fork_, other.right_fork_);
 }
 
-Philo &Philo::operator=(Philo &&other) noexcept {
+philosophers &philosophers::operator=(philosophers &&other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -22,17 +22,17 @@ Philo &Philo::operator=(Philo &&other) noexcept {
   return *this;
 }
 
-void Philo::SaySomething(const std::string &&str) const noexcept {
+void philosophers::SaySomething(const std::string &&str) const noexcept {
   std::lock_guard<std::mutex> lock(config_->GetIoMutex());
   std::cout << "["<< config_->GetTimer().GetTimeSimulation() << "]"
             << ' ' << id_ << ' ' << str <<std::endl;
 }
 
-void Philo::SayTaken() const noexcept {
+void philosophers::SayTaken() const noexcept {
   SaySomething("has taken a fork");
 }
 
-void Philo::SayEating() noexcept {
+void philosophers::SayEating() noexcept {
   SaySomething("\x1b[32mis eating\x1b[0m");
   std::this_thread::sleep_for(
       std::chrono::milliseconds (config_->GetTimeToEat()));
@@ -41,17 +41,17 @@ void Philo::SayEating() noexcept {
   }
 }
 
-void Philo::SaySleeping() const noexcept {
+void philosophers::SaySleeping() const noexcept {
   SaySomething("is sleeping");
   std::this_thread::sleep_for(
       std::chrono::milliseconds (config_->GetTimeToSleep()));
 }
 
-void Philo::SayThinking() const noexcept {
+void philosophers::SayThinking() const noexcept {
   SaySomething("is thinking");
 }
 
-void Philo::PhiloLive() noexcept {
+void philosophers::PhiloLive() noexcept {
   if (id_ % 2) {
     std::this_thread::sleep_for(std::chrono::milliseconds(30));
   }
@@ -76,24 +76,24 @@ void Philo::PhiloLive() noexcept {
   }
 }
 
-size_t Philo::GetTimeLastEat() const {
+size_t philosophers::GetTimeLastEat() const {
   std::shared_lock lock(mutex_eat_);
   return time_last_eat;
 }
 
-void Philo::SayDied() const noexcept {
+void philosophers::SayDied() const noexcept {
   config_->GetIoMutex().lock();
   std::cout << "["<< config_->GetTimer().GetTimeSimulation() << "]"
             << ' ' << id_ << ' ' << "died" <<std::endl;
 }
 
-int Philo::GetCountEat() const {
+int philosophers::GetCountEat() const {
   return count_eat_;
 }
 
-Philo::Philo(const std::shared_ptr<std::mutex> &right_fork,
+philosophers::philosophers(const std::shared_ptr<std::mutex> &right_fork,
              const std::shared_ptr<std::mutex> &left_fork,
-             Config *config,
+             config *config,
              int id)
     : config_(config),
       id_(id) {

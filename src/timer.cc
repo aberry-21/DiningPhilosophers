@@ -2,13 +2,13 @@
 // Created by Aaron Berry on 5/19/21.
 //
 
-#include "includes/Timer.h"
+#include "includes/timer.h"
 
-Timer::Timer(Timer &&other) noexcept : time_start_() {
+timer::timer(timer &&other) noexcept : time_start_() {
   std::swap(time_start_, other.time_start_);
 }
 
-Timer &Timer::operator=(Timer &&other) noexcept {
+timer &timer::operator=(timer &&other) noexcept {
   if (this == &other) {
     return *this;
   }
@@ -16,11 +16,11 @@ Timer &Timer::operator=(Timer &&other) noexcept {
   return *this;
 }
 
-void Timer::StartSimulationTime() noexcept {
+void timer::StartSimulationTime() noexcept {
   time_start_ = std::chrono::high_resolution_clock::now();
 }
 
-Timer::size_type Timer::GetTimeSimulation() const noexcept {
+timer::size_type timer::GetTimeSimulation() const noexcept {
   return std::chrono::duration_cast<std::chrono::milliseconds>(
       std::chrono::high_resolution_clock::now() - time_start_).count();
 }

@@ -2,9 +2,9 @@
 // Created by Aaron Berry on 5/19/21.
 //
 
-#include "includes/Config.h"
+#include "includes/config.h"
 
-Config::Config(int number_of_philo,
+config::config(int number_of_philo,
                int time_to_die,
                int time_to_eat,
                int time_to_sleep,
@@ -19,33 +19,33 @@ Config::Config(int number_of_philo,
   }
 }
 
-int Config::GetNumberOfPhilo() const {
+int config::GetNumberOfPhilo() const {
   return number_of_philo_;
 }
 
-int Config::GetTimeToDie() const {
+int config::GetTimeToDie() const {
   return time_to_die_;
 }
 
-int Config::GetTimeToEat() const {
+int config::GetTimeToEat() const {
   return time_to_eat_;
 }
 
-int Config::GetTimeToSleep() const {
+int config::GetTimeToSleep() const {
   return time_to_sleep_;
 }
 
-int Config::GetNumberOfLunch() const {
+int config::GetNumberOfLunch() const {
   return number_of_lunch_;
 }
 
-std::mutex &Config::GetIoMutex(){
+std::mutex &config::GetIoMutex(){
   return io_mutex_;
 }
 
-Timer &Config::GetTimer(){
+timer &config::GetTimer(){
   return timer_;
 }
-bool Config::IsLimitLunch() const {
+bool config::IsLimitLunch() const {
   return limit_lunch_;
 }

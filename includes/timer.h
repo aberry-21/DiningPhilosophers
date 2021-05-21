@@ -5,15 +5,15 @@
 #pragma once
 #include <chrono>
 
-class Timer {
+class timer {
  public:
   typedef size_t size_type;
 
-  Timer() = default;
-  Timer(const Timer& other) = delete;
-  Timer(Timer&& other) noexcept;
-  Timer& operator=(const Timer& other) = delete;
-  Timer& operator=(Timer&& other) noexcept;
+  timer() = default;
+  timer(const timer& other) = delete;
+  timer(timer&& other) noexcept;
+  timer& operator=(const timer& other) = delete;
+  timer& operator=(timer&& other) noexcept;
   void StartSimulationTime() noexcept;
   [[nodiscard]] size_type GetTimeSimulation() const noexcept;
  private:
